@@ -13,21 +13,30 @@ else
 
 	" Make sure you use single quotes
 
-	" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
-	Plug 'junegunn/vim-easy-align'
-
-	" On-demand loading
-	Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
-	Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-
-	" Using a non-default branch
-	Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
-
 	" vimspector - A multi language graphical debugger for Vim
 	Plug 'puremourning/vimspector'
 
 	" Use release branch (recommended)
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+	" vim-cpp-modern: Enhanced C and C++ syntax highlighting
+	Plug 'bfrg/vim-cpp-modern'
+
+	" Automatic input method switching for vim
+	Plug 'rlue/vim-barbaric'
+
+	" A Lua rewrite of vim-lastplace
+	Plug 'ethanholz/nvim-lastplace'
+
+	" lean & mean status/tabline for vim that's light as air 
+	Plug 'vim-airline/vim-airline'
+
+	" Simple tmux statusline generator with support for powerline symbols and statusline / airline / lightline integration 
+	Plug 'edkolev/tmuxline.vim'
+	
+	" A command-line fuzzy finder 
+	Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+
 
 	" Initialize plugin system
 	" - Automatically executes `filetype plugin indent on` and `syntax enable`.
@@ -36,8 +45,15 @@ else
 	"   filetype indent off   " Disable file-type-specific indentation
 	"   syntax off            " Disable syntax highlighting
 	
+	" Automatically displays all buffers when there's only one tab open.
+	let g:airline#extensions#tabline#enabled = 1
+	" Show bufnr
+	let g:airline#extensions#tabline#buffer_nr_show = 1
 	" show relative line number
 	set relativenumber
+	
+	" use system clipboard
+	set clipboard+=unnamedplus
 
 	" set the tab width	
 	set shiftwidth=4 smarttab
@@ -87,10 +103,19 @@ else
 	nnoremap <silent> K :call ShowDocumentation()<CR>
 
 	" Use <c-e> to show explorer
-	nnoremap <c-e> :CocCommand explorer<CR>
+	nnoremap <silent> <c-e> :CocCommand explorer<CR>
+
+	" Use <c-f> to show fzf finder
+	nnoremap <silent> <c-f> :FZF<CR>
 
 	" Use <c-p> to run coc command
-	nnoremap <c-p> :CocCommand 
+	nnoremap <silent> <c-p> :CocCommand 
+
+	" Use <m-q> to swith to the prevoius buffer
+	nnoremap <silent> <m-q> :bp<CR>
+
+	" Use <m-e> to switch the next buffer
+	nnoremap <silent> <m-e> :bn<CR>
 
 	function! ShowDocumentation()
 	  if CocAction('hasProvider', 'hover')
@@ -198,5 +223,11 @@ else
 	  vnoremap <silent><nowait><expr> <C-d> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
 	  vnoremap <silent><nowait><expr> <C-u> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 	endif
+
+	lua require'nvim-lastplace'.setup{}
+
+	let g:lastplace_ignore_buftype = "quickfix,nofile,help"
+	let g:lastplace_ignore_filetype = "gitcommit,gitrebase,svn,hgcommit"
+	let g:lastplace_open_folds = 1
 
 endif
